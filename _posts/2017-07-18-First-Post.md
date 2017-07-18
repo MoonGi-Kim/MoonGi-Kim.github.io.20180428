@@ -1,6 +1,6 @@
 ---
 layout: inner
-title: 'My First Blog Post'
+title: 'My Second Blog Post'
 date: 2017-07-18 16:26:45
 categories: blog development
 tags: clouds
