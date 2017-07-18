@@ -1,10 +1,10 @@
 # Site Settings
-title: 'Rich Hildred'
+title: 'MoonGi Kim'
 description: 'My Portfolio Site'
-url: 'https://rhildred.github.io' # the base hostname & protocol for your site
-footer_text: '&copy; Rich Hildred'
+url: 'https://MoonGi-Kim.github.io' # the base hostname & protocol for your site
+footer_text: '&copy; MoonGi Kim'
 
 # Admin Settings
-admin_name: 'Rich Hildred'
-admin_email: 'rhildred@conestogac.on.ca'
+admin_name: 'MoonGi Kim'
+admin_email: 'jkim5918@conestogac.on.ca'
 
