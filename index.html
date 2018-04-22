@@ -1,5 +1,855 @@
----
-layout: default
----
+<!--
+* Project: PROG3180 Programming: Mobile Applications
+* Purpose: Final Project
+*       - Build a mobile web app prototype with jQuery and Mobile.
+*
+* Revision History
+*       - 2018.04.05 Created by Moon
+-->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <link rel="shortcur icon" href="images/Pirate-Island-Treasure-Map-icon.png">
+        <title>JJMK MARKET GO</title>
 
-<!-- BLANK -->
+        <!--jQuery google. Ripple enumlator download need.-->
+        <script src="js/lib/jquery-2.1.4.js"></script>
+        <!--jQuery mobile-->
+        <script src="js/lib/jquery.mobile-1.4.5.js"></script>
+        <!--jQuery mobile css-->
+        <link rel="stylesheet" type="text/css" href="css/lib/jquery.mobile-1.4.5.css">
+        <!--jQuery validation library-->
+        <script src="js/lib/jquery.validate.js"></script>
+
+        <!--google api key-->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNdQMbO6UMHKNXulN5LHy9AlvFb-HNQCU"
+                type="text/javascript"></script>
+
+        <!--User jQuery mobile-->
+        <script src="js/jjmkdatabase.js"></script>
+        <script src="js/jjmkmarketgoDAL.js"></script>
+        <script src="js/jjmkutil.js"></script>
+        <script src="js/jjmkglobal.js"></script>
+        <script src="js/jjmkfacade.js"></script>
+        <script src="js/jjmkgeo.js"></script>
+
+        <!--User jQuery mobile css-->
+        <link rel="stylesheet" type="text/css" href="css/lib/jquery.mobile-1.4.5.css">
+        <link rel="stylesheet" type="text/css" href="css/jjmkmystyle.css">
+    </head>
+    <body>
+        <div data-role="page" id="MGHomePage">
+            <div data-position="fixed">
+                <header data-role="header" style="border-color:black;">
+                    <div data-role="header" data-theme="b"><h1>JJMK MarketGo</h1></div>
+                    <div id="mgNav" data-role="navbar">
+                        <ul>
+                            <li><a href="#MGHomePage" data-icon="home" class="ui-btn-active ui-state-persist">Home</a>
+                            </li>
+                            <li><a href="#MGEventPage" data-icon="shop">EVENT</a></li>
+                            <li><a href="#MGItemPage" data-icon="grid">ITEM</a></li>
+                            <li><a href="#MGUserPage" data-icon="heart">USER</a></li>
+                            <li><a href="#MGAboutPage" data-icon="info">ABOUT</a></li>
+                        </ul>
+                    </div>
+                </header>
+            </div>
+            <section data-role="content">
+                <h1>Jay & Moon Final Project App</h1>
+                <p>Market Go is one of Scavenger hunt type app. Market Go allows users to buy affordable local products
+                    through events. The app will connect you to local stores and introduce you to a good neighborhood
+                    stores. For example, if you participate in a burger event, you can find good butcher shop, bakery
+                    and grocery stores in your area and buy products at event prices. By purchasing the event products
+                    registered in the event, users can consume wisely and local shops can increase their sales and
+                    promote the shop by registering their store products in the local events. It is smart app for
+                    shopping and sales!
+                </p>
+                <p class="mgicon"><img src="images/Matryoshka-Treats-icon.png"></p>
+            </section>
+            <footer data-role="footer" data-theme="b" data-position="fixed">
+                <h4>&copy; 2018 Jay Jang & Moon Kim</h4>
+            </footer>
+        </div>
+
+        <!--Event Page-->
+        <div data-role="page" id="MGEventPage">
+            <div data-position="fixed">
+                <header data-role="header" style="border-color:black;">
+                    <div data-role="header" data-theme="b"><h1>Event</h1></div>
+                    <div data-role="navbar">
+                        <ul>
+                            <li><a href="#MGHomePage" data-icon="home">Home</a></li>
+                            <li><a href="#MGEventPage" data-icon="shop" class="ui-btn-active ui-state-persist">EVENT</a>
+                            </li>
+                            <li><a href="#MGItemPage" data-icon="grid">ITEM</a></li>
+                            <li><a href="#MGUserPage" data-icon="heart">USER</a></li>
+                            <li><a href="#MGAboutPage" data-icon="info">ABOUT</a></li>
+                        </ul>
+                    </div>
+                </header>
+            </div>
+            <section data-role="content">
+                <div data-role="header" data-theme="a">
+                    <h2>Event List</h2>
+                </div>
+                <ul id="MGEventList" data-role="listview" class="ui-listview-inset" data-inset="true" data-filter="true"
+                    data-filter-placeholder="Search Events...">
+                    <li>
+                        <a href="#MGEventDisplayPage" data-role="button" data-transition="">
+                            <div>Event Name: Just do it!</div>
+                            <p>Category: Sports</p>
+                            <p>Location: 123 Doon Valley Dr Kitchener!!</p>
+                            <p>Quantity: 10</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#MGEventDisplayPage" data-role="button" data-transition="">
+                            <div>Event Name: Amazing price!</div>
+                            <p>Category: Foods</p>
+                            <p>Location: 123 Queen st Kitchener!!</p>
+                            <p>Quantity: 2</p>
+                        </a>
+                    </li>
+                </ul>
+                <div data-role="navbar" id="MGEventAddBtnGroup">
+                    <ul>
+                        <li><a data-role="button" href="javascript:doGoEventAddPage();" data-theme="b">Add New
+                            Event</a></li>
+                        <li><a data-role="button" href="javascript:doGoItemAddPage();" data-theme="b">Add New Item</a>
+                        </li>
+                        <li><a data-role="button" href="javascript:doGoUserAddPage();" data-theme="b">Add New User</a>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            <footer data-role="footer" data-theme="b" data-position="fixed">
+                <h4>&copy; 2018 Jay Jang & Moon Kim</h4>
+            </footer>
+        </div>
+
+        <div data-role="page" id="MGEventDisplayPage">
+            <div data-position="fixed">
+                <header data-role="header" style="border-color:black;">
+                    <div data-role="header" data-theme="b"><h1>Event</h1></div>
+                    <div data-role="navbar">
+                        <ul>
+                            <li><a href="#MGHomePage" data-icon="home">Home</a></li>
+                            <li><a href="#MGEventPage" data-icon="shop" class="ui-btn-active ui-state-persist">EVENT</a>
+                            </li>
+                            <li><a href="#MGItemPage" data-icon="grid">ITEM</a></li>
+                            <li><a href="#MGUserPage" data-icon="edit">USER</a></li>
+                            <li><a href="#MGAboutPage" data-icon="info">ABOUT</a></li>
+                        </ul>
+                    </div>
+                </header>
+            </div>
+            <section data-role="content">
+                <div data-role="header" data-theme="a">
+                    <h2>Event Details</h2>
+                </div>
+                <form id="MGEventDisplayForm" name="MGEventDisplayForm" action="#" data-ajax="false">
+                    <ul id="MGEventDisplay" data-role="listview" class="ui-listview-inset" data-inset="true"
+                        data-filter="true"
+                        data-filter-placeholder="Search Events...">
+                        <li>
+                            <a href="#MGEventEditPage" data-role="button" data-transition="">
+                                <div>Event Name: Just do it!</div>
+                                <p>Category: Sports</p>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <fieldset data-role="controlgroup" data-type="horizontal">
+                        <button type="button" data-role="button" id="MGEventDisplayBtnModify"
+                                name="MGEventDisplayBtnModify"
+                                data-theme="b">Modify
+                        </button>
+                        <button type="button" data-role="button" id="MGEventDisplayBtnJoin" name="MGEventDisplayBtnJoin"
+                                data-theme="a">Event Join
+                        </button>
+                    </fieldset>
+                </form>
+            </section>
+            <section data-role="content">
+                <div class="ui-grid-b">
+                    <div class="ui-block-a">
+                        <div data-role="header" data-theme="b">
+                            <h2>Joined User</h2>
+                        </div>
+                        <form id="MGJoinEventDisplayForm" name="MGJoinEventDisplayForm" action="#" data-ajax="false">
+                            <ul id="MGJoinEventDisplay" data-role="listview" class="ui-listview-inset" data-inset="true"
+                                data-filter="true"
+                                data-filter-placeholder="Search User...">
+                                <li>
+                                    <a data-role="button" data-transition="">
+                                        <div>User Name: Just do it!</div>
+                                        <p>Category: Sports</p>
+                                        <p>Location: 123 Doon Valley Dr Kitchener!!</p>
+                                        <p>Quantity: 10</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </form>
+                    </div>
+                    <div class="ui-block-b">
+                        <div data-role="header" data-theme="c">
+                            <h2>Item Details</h2>
+                        </div>
+                        <form id="MGEventItemDisplayForm" name="MGEventItemDisplayForm" action="#" data-ajax="false">
+                            <ul id="MGEventItemDisplay" data-role="listview" class="ui-listview-inset" data-inset="true"
+                                data-filter="true"
+                                data-filter-placeholder="Search Item...">
+                                <li>
+                                    <a data-role="button" data-transition="">
+                                        <div>Item Name: Just do it!</div>
+                                        <p>Category: Sports</p>
+                                        <p>Location: 123 Doon Valley Dr Kitchener!!</p>
+                                        <p>Quantity: 10</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a data-role="button" data-transition="">
+                                        <div>Item Name: Just do it!</div>
+                                        <p>Category: Sports</p>
+                                        <p>Location: 123 Doon Valley Dr Kitchener!!</p>
+                                        <p>Quantity: 10</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </form>
+                    </div>
+                    <div class="ui-block-c">
+                        <div data-role="header" data-theme="b">
+                            <h2>My Items</h2>
+                        </div>
+                        <form id="MGUserEventItemDisplayForm" name="MGUserEventItemDisplayForm" action="#"
+                              data-ajax="false">
+                            <ul id="MGUserEventItemDisplay" data-role="listview" class="ui-listview-inset"
+                                data-inset="true" data-filter="true"
+                                data-filter-placeholder="Search My Item...">
+                                <li>
+                                    <a data-role="button" data-transition="">
+                                        <div>Item Name: Just do it!</div>
+                                        <p>Category: Sports</p>
+                                        <p>Location: 123 Doon Valley Dr Kitchener!!</p>
+                                        <p>Quantity: 10</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </form>
+                    </div>
+                </div>
+            </section>
+            <footer data-role="footer" data-theme="b" data-position="fixed">
+                <h4>&copy; 2018 Jay Jang & Moon Kim</h4>
+            </footer>
+        </div>
+
+        <div data-role="page" id="MGEventAddPage">
+            <div data-position="fixed">
+                <header data-role="header" style="border-color:black;">
+                    <div data-role="header" data-theme="b"><h1>Add a Event</h1></div>
+                    <div data-role="navbar">
+                        <ul>
+                            <li><a href="#MGHomePage" data-icon="home">Home</a></li>
+                            <li><a href="#MGEventPage" data-icon="shop" class="ui-btn-active ui-state-persist">EVENT</a>
+                            </li>
+                            <li><a href="#MGEventPage" data-icon="grid">Item</a></li>
+                            <li><a href="#MGUserPage" data-icon="plus">USER</a></li>
+                            <li><a href="#MGAboutPage" data-icon="info">ABOUT</a></li>
+                        </ul>
+                    </div>
+                </header>
+            </div>
+            <section data-role="content">
+                <div data-role="header" data-theme="a">
+                    <h2>Add New Event</h2>
+                </div>
+                <form id="MGEventAddForm" name="MGEventAddForm" action="#" data-ajax="false">
+                    <label for="MGEventAddName">Event Name:</label>
+                    <input id="MGEventAddName" name="MGEventAddName" type="text" value="">
+                    <label for="MGEventAddStartDate">Start Date:</label>
+                    <input id="MGEventAddStartDate" name="MGEventAddStartDate" type="date" value="">
+                    <label for="MGEventAddEndDate">End Date:</label>
+                    <input id="MGEventAddEndDate" name="MGEventAddEndDate" type="date" value="">
+
+                    <fieldset>
+                        <input type="checkbox" id="MGEventAddProcessing" name="MGEventAddProcessing" checked
+                               data-iconpos="left">
+                        <label for="MGEventAddProcessing">Processing?</label>
+                    </fieldset>
+
+                    <label for="MGEventAddDescription">Description:</label>
+                    <textarea id="MGEventAddDescription" name="MGEventAddDescription" value=""></textarea>
+
+                    <fieldset data-role="controlgroup" data-type="horizontal">
+                        <button type="button" data-role="button" id="MGEventAddBtnSave" name="MGEventAddBtnSave"
+                                class="ui-btn-active ui-state-persist">Save
+                        </button>
+                    </fieldset>
+                </form>
+            </section>
+            <footer data-role="footer" data-theme="b" data-position="fixed">
+                <h4>&copy; 2018 Jay Jang & Moon Kim</h4>
+            </footer>
+        </div>
+
+        <div data-role="page" id="MGEventEditPage">
+            <div data-position="fixed">
+                <header data-role="header" style="border-color:black;">
+                    <div data-role="header" data-theme="b"><h1>Event</h1></div>
+                    <div data-role="navbar">
+                        <ul>
+                            <li><a href="#MGHomePage" data-icon="home">Home</a></li>
+                            <li><a href="#MGEventPage" data-icon="shop" class="ui-btn-active ui-state-persist">EVENT</a>
+                            </li>
+                            <li><a href="#MGItemPage" data-icon="grid">ITEM</a></li>
+                            <li><a href="#MGUserPage" data-icon="edit">USER</a></li>
+                            <li><a href="#MGAboutPage" data-icon="info">ABOUT</a></li>
+                        </ul>
+                    </div>
+                </header>
+            </div>
+            <section data-role="content">
+                <div data-role="header" data-theme="a">
+                    <h2>Edit Event</h2>
+                </div>
+                <form id="MGEventEditForm" name="MGEventEditForm" action="#" data-ajax="false">
+                    <div class="ui-grid-a">
+                        <div class="ui-block-a">
+                            <div class="ui-bar ui-bar-c">
+                                <label for="MGEventEditName">Event Name:</label>
+                                <input id="MGEventEditName" name="MGEventEditName" type="text" value="">
+                                <label for="MGEventEditStartDate">Start Date:</label>
+                                <input id="MGEventEditStartDate" name="MGEventEditStartDate" type="date" value="">
+                                <label for="MGEventEditEndDate">End Date:</label>
+                                <input id="MGEventEditEndDate" name="MGEventEditEndDate" type="date" value="">
+                            </div>
+                        </div>
+                        <div class="ui-block-b">
+                            <div class="ui-bar ui-bar-c">
+                                <label for="MGEventEditDescription">Description:</label>
+                                <textarea id="MGEventEditDescription" name="MGEventEditDescription"></textarea>
+                                <fieldset>
+                                    <input type="checkbox" id="MGEventEditProcessing" name="MGEventEditProcessing"
+                                           checked data-iconpos="left">
+                                    <label for="MGEventEditProcessing">Processing?</label>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+
+                    <fieldset data-role="controlgroup" data-type="horizontal">
+                        <button type="button" data-role="button" id="MGEventEditBtnDelete" name="MGEventEditBtnDelete"
+                                data-theme="b">Delete
+                        </button>
+                        <button type="button" data-role="button" id="MGEventEditBtnUpdate" name="MGEventEditBtnUpdate"
+                                class="ui-btn-active ui-state-persist">Update
+                        </button>
+                    </fieldset>
+                </form>
+            </section>
+
+            <section data-role="content">
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <div class="ui-bar ui-bar-c">
+                            <div data-role="header" data-theme="b">
+                                <h4>Free Item</h4>
+                            </div>
+                            <form id="MGNotJoinEventItemListForm" name="MGNotJoinEventItemListForm" action="#"
+                                  data-ajax="false">
+                                <ul id="MGNotJoinEventItemList" data-role="listview" class="ui-listview-inset"
+                                    data-inset="true"
+                                    data-filter="true"
+                                    data-filter-placeholder="Search Item...">
+                                    <li>
+                                        <a data-role="button" data-transition="">
+                                            <div>Item Name: Just do it!</div>
+                                            <p>Location: 123 Doon Valley Dr Kitchener!!</p>
+                                            <p>Quantity: 10</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="ui-block-b">
+                        <div class="ui-bar ui-bar-c">
+                            <div data-role="header" data-theme="c">
+                                <h4>Join Item</h4>
+                            </div>
+                            <form id="MGJoinEventItemListForm" name="MGJoinEventItemListForm" action="#"
+                                  data-ajax="false">
+                                <ul id="MGJoinEventItemList" data-role="listview" class="ui-listview-inset"
+                                    data-inset="true"
+                                    data-filter="true"
+                                    data-filter-placeholder="Search Item...">
+                                    <li>
+                                        <a data-role="button" data-transition="">
+                                            <div>Item Name: Just do it!</div>
+                                            <p>Location: 123 Doon Valley Dr Kitchener!!</p>
+                                            <p>Quantity: 10</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a data-role="button" data-transition="">
+                                            <div>Item Name: Just do it!</div>
+                                            <p>Location: 123 Doon Valley Dr Kitchener!!</p>
+                                            <p>Quantity: 10</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer data-role="footer" data-theme="b" data-position="fixed">
+                <h4>&copy; 2018 Jay Jang & Moon Kim</h4>
+            </footer>
+        </div>
+
+        <!-- Item Page-->
+        <div data-role="page" id="MGItemPage">
+            <div data-position="fixed">
+                <header data-role="header" style="border-color:black;">
+                    <div data-role="header" data-theme="b"><h1>Item</h1></div>
+                    <div data-role="navbar">
+                        <ul>
+                            <li><a href="#MGHomePage" data-icon="home">Home</a></li>
+                            <li><a href="#MGEventPage" data-icon="shop">EVENT</a></li>
+                            <li><a href="#MGItemPage" data-icon="grid" class="ui-btn-active ui-state-persist">ITEM</a>
+                            </li>
+                            <li><a href="#MGUserPage" data-icon="heart">USER</a></li>
+                            <li><a href="#MGAboutPage" data-icon="info">ABOUT</a></li>
+                        </ul>
+                    </div>
+                </header>
+            </div>
+            <section data-role="content">
+                <div data-role="header" data-theme="a">
+                    <h2>Item List</h2>
+                </div>
+                <ul id="MGItemList" data-role="listview" class="ui-listview-inset" data-inset="true" data-filter="true"
+                    data-filter-placeholder="Search Items...">
+                    <li>
+                        <a href="#MGItemEditPage" data-role="button" data-transition="">
+                            <div>Item Name: Just do it!</div>
+                            <p>Category: Sports</p>
+                            <p>Location: 123 Doon Valley Dr Kitchener!!</p>
+                            <p>Quantity: 10</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#MGItemEditPage" data-role="button" data-transition="">
+                            <div>Item Name: Amazing price!</div>
+                            <p>Category: Foods</p>
+                            <p>Location: 123 Queen st Kitchener!!</p>
+                            <p>Quantity: 2</p>
+                        </a>
+                    </li>
+                </ul>
+                <div data-role="navbar" id="MGItemAddBtnGroup">
+                    <ul>
+                        <li><a data-role="button" href="javascript:doGoEventAddPage();" data-theme="b">Add New
+                            Event</a></li>
+                        <li><a data-role="button" href="javascript:doGoItemAddPage();" data-theme="b">Add New Item</a>
+                        </li>
+                        <li><a data-role="button" href="javascript:doGoUserAddPage();" data-theme="b">Add New User</a>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            <footer data-role="footer" data-theme="b" data-position="fixed">
+                <h4>&copy; 2018 Jay Jang & Moon Kim</h4>
+            </footer>
+        </div>
+
+        <div data-role="page" id="MGItemAddPage">
+            <div data-position="fixed">
+                <header data-role="header" style="border-color:black;">
+                    <div data-role="header" data-theme="b"><h1>Add a Item</h1></div>
+                    <div data-role="navbar">
+                        <ul>
+                            <li><a href="#MGHomePage" data-icon="home">Home</a></li>
+                            <li><a href="#MGEventPage" data-icon="shop">EVENT</a></li>
+                            <li><a href="#MGItemPage" data-icon="grid" class="ui-btn-active ui-state-persist">ITEM</a>
+                            </li>
+                            <li><a href="#MGUserPage" data-icon="plus">USER</a></li>
+                            <li><a href="#MGAboutPage" data-icon="info">ABOUT</a></li>
+                        </ul>
+                    </div>
+                </header>
+            </div>
+            <section data-role="content">
+                <div data-role="header" data-theme="a">
+                    <h2>Add New Item</h2>
+                </div>
+                <form id="MGItemAddForm" name="MGItemAddForm" action="#" data-ajax="false">
+                    <label for="MGItemAddName">Item Name:</label>
+                    <input id="MGItemAddName" name="MGItemAddName" type="text" value="">
+                    <label for="MGItemAddCategoryId">Type:</label>
+                    <select id="MGItemAddCategoryId" name="MGItemAddCategoryId" data-natxive-menu="true">
+                        <option value="1">Sports</option>
+                        <option value="2">Foods</option>
+                        <option value="3" selected>Movies</option>
+                    </select>
+
+                    <div class="ui-grid-a">
+                        <div class="ui-block-a">
+                            <div class="ui-bar ui-bar-c">
+                                <label for="MGItemAddPrice">Price:</label>
+                                <input id="MGItemAddPrice" name="MGItemAddPrice" type="number" value="">
+                                <label for="MGItemAddStartDate">Start Date:</label>
+                                <input id="MGItemAddStartDate" name="MGItemAddStartDate" type="date" value="">
+                                <label for="MGItemAddDiscountRate">Discount Rate:</label>
+                                <input id="MGItemAddDiscountRate" name="MGItemAddDiscountRate" type="number" value="">
+                            </div>
+                        </div>
+                        <div class="ui-block-b">
+                            <div class="ui-bar ui-bar-c">
+                                <label for="MGItemAddQuantity">Quantity:</label>
+                                <input id="MGItemAddQuantity" name="MGItemAddQuantity" type="number" value="">
+                                <label for="MGItemAddEndDate">End Date:</label>
+                                <input id="MGItemAddEndDate" name="MGItemAddEndDate" type="date" value="">
+                                <label for="MGItemAddLocation">Location:</label>
+                                <input id="MGItemAddLocation" name="MGItemAddLocation" type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <section data-role="content">
+                        <input type="hidden" id="MGItemAddLongitude" name="MGItemAddLongitude" value="">
+                        <input type="hidden" id="MGItemAddLatitude" name="MGItemAddLatitude" value="">
+                        <div role="main" class="ui-content" id="map-canvas">
+                            <!--map loads here-->
+                            <!--google key -  -->
+                        </div>
+                    </section>
+
+                    <fieldset data-role="controlgroup" data-type="horizontal">
+                        <button type="button" data-role="button" id="MGItemAddBtnSave" name="MGItemAddBtnSave"
+                                class="ui-btn-active ui-state-persist">Save
+                        </button>
+                    </fieldset>
+                </form>
+            </section>
+            <footer data-role="footer" data-theme="b" data-position="fixed">
+                <h4>&copy; 2018 Jay Jang & Moon Kim</h4>
+            </footer>
+        </div>
+
+        <div data-role="page" id="MGItemEditPage">
+            <div data-position="fixed">
+                <header data-role="header" style="border-color:black;">
+                    <div data-role="header" data-theme="b"><h1>Item</h1></div>
+                    <div data-role="navbar">
+                        <ul>
+                            <li><a href="#MGHomePage" data-icon="home">Home</a></li>
+                            <li><a href="#MGEventPage" data-icon="shop">EVENT</a></li>
+                            <li><a href="#MGItemPage" data-icon="grid" class="ui-btn-active ui-state-persist">ITEM</a>
+                            </li>
+                            <li><a href="#MGUserPage" data-icon="edit">USER</a></li>
+                            <li><a href="#MGAboutPage" data-icon="info">ABOUT</a></li>
+                        </ul>
+                    </div>
+                </header>
+            </div>
+            <section data-role="content">
+                <div data-role="header" data-theme="a">
+                    <h2>Edit Item</h2>
+                </div>
+                <form id="MGItemEditForm" name="MGItemEditForm" action="#" data-ajax="false">
+                    <label for="MGItemEditName">Item Name:</label>
+                    <input id="MGItemEditName" name="MGItemEditName" type="text" value="">
+                    <label for="MGItemEditCategoryId">Type:</label>
+                    <select id="MGItemEditCategoryId" name="MGItemEditCategoryId" data-natxive-menu="true">
+                        <option value="1">Sports</option>
+                        <option value="2">Foods</option>
+                        <option value="3" selected>Movies</option>
+                    </select>
+
+                    <div class="ui-grid-a">
+                        <div class="ui-block-a">
+                            <div class="ui-bar ui-bar-c">
+                                <label for="MGItemEditPrice">Price:</label>
+                                <input id="MGItemEditPrice" name="MGItemEditPrice" type="number" value="">
+                                <label for="MGItemEditStartDate">Start Date:</label>
+                                <input id="MGItemEditStartDate" name="MGItemEditStartDate" type="date" value="">
+                                <label for="MGItemEditDiscountRate">Discount Rate:</label>
+                                <input id="MGItemEditDiscountRate" name="MGItemEditDiscountRate" type="number" value="">
+                            </div>
+                        </div>
+                        <div class="ui-block-b">
+                            <div class="ui-bar ui-bar-c">
+                                <label for="MGItemEditQuantity">Quantity:</label>
+                                <input id="MGItemEditQuantity" name="MGItemEditQuantity" type="number" value="">
+                                <label for="MGItemEditEndDate">End Date:</label>
+                                <input id="MGItemEditEndDate" name="MGItemEditEndDate" type="date" value="">
+                                <label for="MGItemEditLocation">Location:</label>
+                                <input id="MGItemEditLocation" name="MGItemEditLocation" type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <section data-role="content">
+                        <input type="hidden" id="MGItemEditLongitude" name="MGItemEditLongitude" value="">
+                        <input type="hidden" id="MGItemEditLatitude" name="MGItemEditLatitude" value="">
+                        <div role="main" class="ui-content" id="map-canvas-edit">
+                            <!--map loads here-->
+                            <!--google key -  -->
+                        </div>
+                    </section>
+
+                    <fieldset data-role="controlgroup" data-type="horizontal">
+                        <button type="button" data-role="button" id="MGItemEditBtnDelete" name="MGItemEditBtnDelete"
+                                data-theme="b">Delete
+                        </button>
+                        <button type="button" data-role="button" id="MGItemEditBtnUpdate" name="MGItemEditBtnUpdate"
+                                class="ui-btn-active ui-state-persist">Update
+                        </button>
+                    </fieldset>
+                </form>
+            </section>
+            <footer data-role="footer" data-theme="b" data-position="fixed">
+                <h4>&copy; 2018 Jay Jang & Moon Kim</h4>
+            </footer>
+        </div>
+
+        <!--User Page-->
+        <div data-role="page" id="MGUserPage">
+            <div data-position="fixed">
+                <header data-role="header" style="border-color:black;">
+                    <div data-role="header" data-theme="b"><h1>User</h1></div>
+                    <div data-role="navbar">
+                        <ul>
+                            <li><a href="#MGHomePage" data-icon="home">Home</a></li>
+                            <li><a href="#MGEventPage" data-icon="shop">EVENT</a></li>
+                            <li><a href="#MGItemPage" data-icon="grid">ITEM</a></li>
+                            <li><a href="#MGUserPage" data-icon="heart" class="ui-btn-active ui-state-persist">USER</a>
+                            </li>
+                            <li><a href="#MGAboutPage" data-icon="info">ABOUT</a></li>
+                        </ul>
+                    </div>
+                </header>
+            </div>
+            <section data-role="content">
+                <div data-role="header" data-theme="a">
+                    <h2>User List</h2>
+                </div>
+                <ul id="MGUserList" data-role="listview" class="ui-listview-inset" data-inset="true" data-filter="true"
+                    data-filter-placeholder="Search Users...">
+                    <li>
+                        <a href="#MGUserEditPage" data-role="button" data-transition="">
+                            <div>Name: Manager Data</div>
+                            <p>Email: jkim5918@conestogac.on.ca</p>
+                            <p>User Type: Manager!!</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#MGUserEditPage" data-role="button" data-transition="">
+                            <div>Name: User Data</div>
+                            <p>Email: jkim5918@conestogac.on.ca</p>
+                            <p>User Type: User!!</p>
+                        </a>
+                    </li>
+                </ul>
+                <div data-role="navbar" id="MGUserAddBtnGroup">
+                    <ul>
+                        <li><a data-role="button" href="javascript:doGoEventAddPage();" data-theme="b">Add New
+                            Event</a></li>
+                        <li><a data-role="button" href="javascript:doGoItemAddPage();" data-theme="b">Add New Item</a>
+                        </li>
+                        <li><a data-role="button" href="javascript:goUserAddPage(true);" data-theme="b">Add New User</a>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            <footer data-role="footer" data-theme="b" data-position="fixed">
+                <h4>&copy; 2018 Jay Jang & Moon Kim</h4>
+            </footer>
+        </div>
+
+        <div data-role="page" id="MGUserAddPage">
+            <div data-position="fixed">
+                <header data-role="header" style="border-color:black;">
+                    <div data-role="header" data-theme="b"><h1>Add a User</h1></div>
+                    <div data-role="navbar">
+                        <ul>
+                            <li><a href="#MGHomePage" data-icon="home">Home</a></li>
+                            <li><a href="#MGEventPage" data-icon="shop">EVENT</a></li>
+                            <li><a href="#MGItemPage" data-icon="grid">ITEM</a>
+                            </li>
+                            <li><a href="#MGUserPage" data-icon="plus" class="ui-btn-active ui-state-persist">USER</a>
+                            </li>
+                            <li><a href="#MGAboutPage" data-icon="info">ABOUT</a></li>
+                        </ul>
+                    </div>
+                </header>
+            </div>
+            <section data-role="content">
+                <div data-role="header" data-theme="a">
+                    <h2>Add New User</h2>
+                </div>
+                <form id="MGUserAddForm" name="MGUserAddForm" action="#" data-ajax="false">
+                    <label for="MGUserAddFirstName">First Name:</label>
+                    <input id="MGUserAddFirstName" name="MGUserAddFirstName" type="text" value="">
+                    <label for="MGUserAddLastName">Last Name:</label>
+                    <input id="MGUserAddLastName" name="MGUserAddLastName" type="text" value="">
+                    <label for="MGUserAddEmail">User Email:</label>
+                    <input id="MGUserAddEmail" name="MGUserAddEmail" type="email" value="jkim5918@conestogac.on.ca">
+                    <label for="MGUserAddPassword">Password:</label>
+                    <input id="MGUserAddPassword" name="MGUserAddPassword" type="password" value="">
+                    <label for="MGUserAddPasswordRe">[RE] Password:</label>
+                    <input id="MGUserAddPasswordRe" name="MGUserAddPasswordRe" type="password" value="">
+
+                    <label for="MGUserAddType">Type:</label>
+                    <select id="MGUserAddType" name="MGUserAddType" data-natxive-menu="true">
+                        <option value="1">User</option>
+                        <option value="2">Supplier</option>
+                        <option value="3" selected>Manager</option>
+                    </select>
+
+                    <fieldset data-role="controlgroup" data-type="horizontal">
+                        <button type="button" data-role="button" id="MGUserAddBtnSave" name="MGUserAddBtnSave"
+                                class="ui-btn-active ui-state-persist">Save
+                        </button>
+                    </fieldset>
+                </form>
+            </section>
+            <footer data-role="footer" data-theme="b" data-position="fixed">
+                <h4>&copy; 2018 Jay Jang & Moon Kim</h4>
+            </footer>
+        </div>
+
+        <div data-role="page" id="MGUserEditPage">
+            <div data-position="fixed">
+                <header data-role="header" style="border-color:black;">
+                    <div data-role="header" data-theme="b"><h1>User</h1></div>
+                    <div data-role="navbar">
+                        <ul>
+                            <li><a href="#MGHomePage" data-icon="home">Home</a></li>
+                            <li><a href="#MGEventPage" data-icon="shop">EVENT</a></li>
+                            <li><a href="#MGItemPage" data-icon="grid">ITEM</a></li>
+                            <li><a href="#MGUserPage" data-icon="edit" class="ui-btn-active ui-state-persist">USER</a>
+                            </li>
+                            <li><a href="#MGAboutPage" data-icon="info">ABOUT</a></li>
+                        </ul>
+                    </div>
+                </header>
+            </div>
+            <section data-role="content">
+                <div data-role="header" data-theme="a">
+                    <h2>Edit User</h2>
+                </div>
+                <form id="MGUserEditForm" name="MGUserEditForm" action="#" data-ajax="false">
+                    <label for="MGUserEditFirstName">First Name:</label>
+                    <input id="MGUserEditFirstName" name="MGUserEditFirstName" type="text" value="">
+                    <label for="MGUserEditLastName">Last Name:</label>
+                    <input id="MGUserEditLastName" name="MGUserEditLastName" type="text" value="">
+                    <label for="MGUserEditEmail">User Email:</label>
+                    <input id="MGUserEditEmail" name="MGUserEditEmail" type="email" value="jkim5918@conestogac.on.ca">
+                    <label for="MGUserEditPassword">Password:</label>
+                    <input id="MGUserEditPassword" name="MGUserEditPassword" type="password" value="">
+                    <label for="MGUserEditPasswordRe">[RE] Password:</label>
+                    <input id="MGUserEditPasswordRe" name="MGUserEditPasswordRe" type="password" value="">
+
+                    <label for="MGUserEditType">Type:</label>
+                    <select id="MGUserEditType" name="MGUserEditType" data-natxive-menu="true">
+                        <option value="1">User</option>
+                        <option value="2">Supplier</option>
+                        <option value="3" selected>Manager</option>
+                    </select>
+
+                    <fieldset data-role="controlgroup" data-type="horizontal">
+                        <button type="button" data-role="button" id="MGUserEditBtnDelete" name="MGUserEditBtnDelete"
+                                data-theme="b">Delete
+                        </button>
+                        <button type="button" data-role="button" id="MGUserEditBtnUpdate" name="MGUserEditBtnUpdate"
+                                class="ui-btn-active ui-state-persist">Update
+                        </button>
+                    </fieldset>
+                </form>
+            </section>
+            <footer data-role="footer" data-theme="b" data-position="fixed">
+                <h4>&copy; 2018 Jay Jang & Moon Kim</h4>
+            </footer>
+        </div>
+
+        <!--About Page-->
+        <div data-role="page" id="MGAboutPage">
+            <div data-position="fixed">
+                <header data-role="header" style="border-color:black;">
+                    <div data-role="header" data-theme="b"><h1>About Us</h1></div>
+                    <div data-role="navbar">
+                        <ul>
+                            <li><a href="#MGHomePage" data-icon="home">Home</a></li>
+                            <li><a href="#MGEventPage" data-icon="shop">EVENT</a></li>
+                            <li><a href="#MGItemPage" data-icon="grid">ITEM</a></li>
+                            <li><a href="#MGUserPage" data-icon="heart">USER</a></li>
+                            <li><a href="#MGAboutPage" data-icon="info" class="ui-btn-active ui-state-persist">ABOUT</a>
+                            </li>
+                        </ul>
+                    </div>
+                </header>
+            </div>
+            <section data-role="content">
+                <div data-role="header" data-theme="a">
+                    <h2>Log In</h2>
+                </div>
+                <hr/>
+                <form id="MGUserLoginForm" name="MGUserLoginForm" data-ajax="false" action="#">
+                    <label for="MGUserLoginEmail">User Email:</label>
+                    <input id="MGUserLoginEmail" name="MGUserLoginEmail" type="email" value="jkim5918@conestogac.on.ca">
+                    <label for="MGUserLoginPassword">Password:</label>
+                    <input id="MGUserLoginPassword" name="MGUserLoginPassword" type="password"
+                           placeholder="Enter Password...">
+                    <label for="MGUserLoginNickName">Nick Name:</label>
+                    <input id="MGUserLoginNickName" name="MGUserLoginNickName" type="text" value="jkim5918">
+
+                    <button type="button" data-role="button" id="MGUserLogin" name="MGUserLogin"
+                            class="ui-btn-active ui-state-persist">Log In
+                    </button>
+                </form>
+                <hr/>
+                <div data-role="header" data-theme="a">
+                    <h2>Database</h2>
+                </div>
+                <button type="button" data-role="button" id="MGSettingClearDatabase" name="MGSettingClearDatabase"
+                        data-theme="b">Clear Database
+                </button>
+                <hr/>
+
+                <div data-role="header" data-theme="a">
+                    <h2>About Market Go</h2>
+                </div>
+
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <div class="ui-bar ui-bar-c">
+                            <a href="mailto:jjang3530@conestogac.on.ca" data-role="button" title="Created by Jay Jang"
+                               data-icon="mail">Creator: Jay Jang</a>
+                            <a href="mailto:jkim5918@conestogac.on.ca" data-role="button" title="Edited by Moon Kim"
+                               data-icon="mail">Editor: Moon Kim</a>
+                        </div>
+                    </div>
+                    <div class="ui-block-b">
+                        <div class="ui-bar ui-bar-c">
+                            <a href="tel:519.748.5220" data-role="button" data-icon="phone">Call: 000.000.0000</a>
+                            <a href="http://www.jjmk-marketgo.ca" data-role="button" data-icon="location">Market Go</a>
+                        </div>
+                    </div>
+                </div>
+                <div data-role="header" data-theme="c">
+                    <h6>Please feel free to contact me if you have any suggestions!</h6>
+                </div>
+            </section>
+            <footer data-role="footer" data-theme="b" data-position="fixed">
+                <h4>&copy; 2018 Jay Jang & Moon Kim</h4>
+            </footer>
+        </div>
+    </body>
+</html>
