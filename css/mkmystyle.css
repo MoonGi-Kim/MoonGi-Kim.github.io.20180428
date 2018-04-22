@@ -1,0 +1,33 @@
+/* Project: PROG3180 Programming: Mobile Applications
+ * Purpose: Assignment3 Stylesheet
+ *       - style sheet for html page.
+ *
+ * Revision History
+ *       - 2018.04.06 Created by Moon
+ */
+
+
+body div section .mgicon{
+    text-align: center;
+}
+body div section .mgicon img {
+    width: 42%;
+    height: 42%;
+}
+
+label.error{
+    color: #F00;
+    font-weight: bold;
+}
+
+input.error,
+select.error,
+textarea.error {
+    border: 1px red solid;
+}
+
+#map-canvas, #map-canvas-edit{
+    padding: 0;
+    min-width: 100%;
+    min-height: 200px;
+}
